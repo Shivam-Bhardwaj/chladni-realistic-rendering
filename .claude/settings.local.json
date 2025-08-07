@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell:*)",
+      "Bash(C:vcpkgbootstrap-vcpkg.bat)",
+      "Bash(cmd /c:*)",
+      "Bash(C:vcpkgvcpkg.exe install glew:x64-windows glfw3:x64-windows glm:x64-windows portaudio:x64-windows fftw3:x64-windows)",
+      "Bash(mkdir:*)",
+      "Bash(cmake:*)",
+      "Bash(C:vcpkgvcpkg.exe list portaudio)",
+      "Bash(\"C:\\vcpkg\\vcpkg.exe\" list portaudio)",
+      "Bash(\"C:\\vcpkg\\vcpkg.exe\" list fftw3)",
+      "Bash(timeout:*)",
+      "Bash(.ChladniSimulation.exe)",
+      "Bash(ls:*)",
+      "Bash(rm:*)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(copy:*)",
+      "Bash(cp:*)",
+      "Bash(taskkill:*)",
+      "Bash(cat:*)",
+      "Bash(ChladniSimulation.exe)",
+      "Bash(\"C:\\vcpkg\\vcpkg.exe\" search imgui)",
+      "Bash(\"C:\\vcpkg\\vcpkg.exe\" install imgui[glfw-binding,opengl3-binding]:x64-windows)",
+      "Bash(\"C:\\vcpkg\\vcpkg.exe\" list imgui)",
+      "Bash(dir:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(sed:*)"
+    ],
+    "deny": []
+  }
+}

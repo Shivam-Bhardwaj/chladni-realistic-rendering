@@ -64,16 +64,16 @@ High-performance, real-time Chladni plate simulation with professional-grade rea
 Your repository will have this clean structure:
 ```
 chladni-realistic-rendering/
-├── 📁 src/                     # Core application code
-├── 📁 include/                 # Header files
-├── 📁 shaders/                 # OpenGL shaders (PBR, compute)
-├── 🎮 demo_realistic_rendering.cpp
-├── 🔧 CMakeLists.txt
-├── 📖 README.md
-├── 📚 REALISTIC_RENDERING.md
-├── ⚖️  LICENSE
-├── 🤝 CONTRIBUTING.md
-└── 🚫 .gitignore
+├── src/                        # Core application code
+├── include/                    # Header files
+├── shaders/                    # OpenGL shaders (PBR, compute)
+├── demo_realistic_rendering.cpp
+├── CMakeLists.txt
+├── README.md
+├── REALISTIC_RENDERING.md
+├── LICENSE
+├── CONTRIBUTING.md
+└── .gitignore
 ```
 
 ## 🎯 Post-Push Checklist
@@ -112,14 +112,14 @@ Consider adding these to showcase your work:
 
 Upload these to an `assets/` or `docs/` folder and reference in README.
 
-## ✨ Your Repository URL
+##  Your Repository URL
 
 After creation, your repository will be available at:
 `https://github.com/YOUR_USERNAME/chladni-realistic-rendering`
 
 ---
 
-**🎉 Congratulations!** Your realistic rendering engine is ready to showcase to the world!
+**Congratulations!** Your realistic rendering engine is ready to showcase to the world!
 
 The repository includes:
 - ✅ Complete source code with realistic rendering engine

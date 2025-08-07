@@ -69,14 +69,14 @@ public:
         
         std::cout << "\n=== REALISTIC RENDERING ENGINE DEMO ===" << std::endl;
         std::cout << "This demo showcases the transformation from game-like to realistic rendering." << std::endl;
-        std::cout << "\n🎨 RENDERING IMPROVEMENTS:" << std::endl;
-        std::cout << "  ✅ Physically-Based Rendering (PBR) materials" << std::endl;
-        std::cout << "  ✅ Realistic particle representation (3D quads vs points)" << std::endl;
-        std::cout << "  ✅ Metallic plate with proper reflections" << std::endl;
-        std::cout << "  ✅ Particle density heat mapping" << std::endl;
-        std::cout << "  ✅ Dynamic lighting and material properties" << std::endl;
-        std::cout << "  ✅ Enhanced surface detail and normal mapping" << std::endl;
-        std::cout << "\n⌨️  CONTROLS:" << std::endl;
+        std::cout << "\nRENDERING IMPROVEMENTS:" << std::endl;
+        std::cout << "   Physically-Based Rendering (PBR) materials" << std::endl;
+        std::cout << "   Realistic particle representation (3D quads vs points)" << std::endl;
+        std::cout << "   Metallic plate with proper reflections" << std::endl;
+        std::cout << "   Particle density heat mapping" << std::endl;
+        std::cout << "   Dynamic lighting and material properties" << std::endl;
+        std::cout << "   Enhanced surface detail and normal mapping" << std::endl;
+        std::cout << "\n CONTROLS:" << std::endl;
         std::cout << "  SPACE: Toggle between old and new rendering" << std::endl;
         std::cout << "  A: Toggle auto-switching every 5 seconds" << std::endl;
         std::cout << "  1-5: Adjust material properties" << std::endl;
@@ -320,12 +320,12 @@ private:
         if (feature_timer > 3.0f && use_realistic_rendering) {
             static int feature_index = 0;
             const char* features[] = {
-                "✅ PBR Materials: Realistic light interaction",
-                "✅ 3D Particles: Volumetric representation vs flat points",
-                "✅ Metallic Surface: Proper reflections and specularity",
-                "✅ Density Mapping: Heat visualization of particle accumulation",
-                "✅ Dynamic Lighting: Shadows and atmospheric effects",
-                "✅ Surface Detail: Normal mapping and micro-surface variation"
+                " PBR Materials: Realistic light interaction",
+                " 3D Particles: Volumetric representation vs flat points",
+                " Metallic Surface: Proper reflections and specularity",
+                " Density Mapping: Heat visualization of particle accumulation",
+                " Dynamic Lighting: Shadows and atmospheric effects",
+                " Surface Detail: Normal mapping and micro-surface variation"
             };
             
             std::cout << features[feature_index] << std::endl;
@@ -419,16 +419,16 @@ public:
 };
 
 int main() {
-    std::cout << "🚀 Initializing Realistic Rendering Engine Demo..." << std::endl;
+    std::cout << "Initializing Realistic Rendering Engine Demo..." << std::endl;
     
     RealisticRenderingDemo demo;
     if (demo.init()) {
         demo.run();
     } else {
-        std::cerr << "❌ Failed to initialize demo" << std::endl;
+        std::cerr << " Failed to initialize demo" << std::endl;
         return -1;
     }
     
-    std::cout << "✅ Demo completed successfully!" << std::endl;
+    std::cout << " Demo completed successfully!" << std::endl;
     return 0;
 }

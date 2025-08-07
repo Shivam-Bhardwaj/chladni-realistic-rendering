@@ -1,0 +1,71 @@
+cmake_minimum_required(VERSION 3.18)
+project(ChladniSimulation CUDA CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CUDA_STANDARD 14)
+
+# Find packages
+find_package(CUDA REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(glm REQUIRED)
+
+# CUDA settings
+set(CMAKE_CUDA_ARCHITECTURES 86 89 90)  # RTX 4090 is SM 8.9
+enable_language(CUDA)
+
+# Include directories
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CUDA_INCLUDE_DIRS})
+
+# Source files
+set(SOURCES
+    src/simple_main.cpp
+)
+
+set(CUDA_SOURCES
+    src/particle_physics.cu
+)
+
+# Create executable
+add_executable(${PROJECT_NAME} ${SOURCES} ${CUDA_SOURCES})
+
+# Set CUDA properties
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+    CUDA_RESOLVE_DEVICE_SYMBOLS ON
+)
+
+# Compiler flags
+target_compile_options(${PROJECT_NAME} PRIVATE
+    $<$<COMPILE_LANGUAGE:CUDA>:
+        --use_fast_math
+        -O3
+        --expt-relaxed-constexpr
+    >
+    $<$<COMPILE_LANGUAGE:CXX>:
+        -O3
+        -march=native
+    >
+)
+
+# Link libraries (no audio dependencies)
+target_link_libraries(${PROJECT_NAME}
+    ${CUDA_LIBRARIES}
+    ${CUDA_curand_LIBRARY}
+    ${OPENGL_LIBRARIES}
+    GLEW::GLEW
+    glfw
+    glm::glm
+)
+
+# Windows-specific settings
+if(WIN32)
+    # Copy required DLLs to output directory
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:GLEW::GLEW>
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )
+endif()

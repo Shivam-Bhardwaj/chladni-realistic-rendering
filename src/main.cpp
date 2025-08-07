@@ -165,7 +165,7 @@ public:
         // Try to initialize audio, but don't fail if it doesn't work
         if (!initAudio()) {
             LOG_WARNING("Audio initialization failed - starting in manual mode");
-            std::cout << "\n⚠️  AUDIO INITIALIZATION FAILED" << std::endl;
+            std::cout << "\nWARNING: AUDIO INITIALIZATION FAILED" << std::endl;
             std::cout << "Starting simulation in manual control mode." << std::endl;
             std::cout << "Use the GUI controls (G key) to adjust frequency and amplitude." << std::endl;
             manualMode = true;  // Force manual mode
@@ -180,8 +180,8 @@ public:
     void run() {
         LOG_INFO("Starting simulation main loop");
         std::cout << "\n=== CHLADNI PLATE SIMULATION ===" << std::endl;
-        std::cout << "🎵 Make sounds near your microphone to see particle patterns change!" << std::endl;
-        std::cout << "\n🖱️ MOUSE CONTROLS:" << std::endl;
+        std::cout << "Make sounds near your microphone to see particle patterns change!" << std::endl;
+        std::cout << "\nMOUSE CONTROLS:" << std::endl;
         std::cout << "  Left Click + Drag: Rotate camera around the plate" << std::endl;
         std::cout << "  Mouse Wheel: Zoom in/out" << std::endl;
         std::cout << "  Right Click: Reset camera to default position" << std::endl;
@@ -190,17 +190,17 @@ public:
         std::cout << "  ESC Key: Exit simulation" << std::endl;
         std::cout << "  G Key: Toggle GUI control panel" << std::endl;
         if (audioInitialized) {
-            std::cout << "\n🔊 AUDIO:" << std::endl;
+            std::cout << "\nAUDIO:" << std::endl;
             std::cout << "  - Speak, whistle, play music, or clap near microphone" << std::endl;
             std::cout << "  - Different frequencies create different patterns" << std::endl;
             std::cout << "  - Louder sounds = more particle movement" << std::endl;
         } else {
-            std::cout << "\n🎛️ MANUAL MODE (Audio unavailable):" << std::endl;
+            std::cout << "\nMANUAL MODE (Audio unavailable):" << std::endl;
             std::cout << "  - Use GUI controls (G key) to adjust frequency and amplitude" << std::endl;
             std::cout << "  - Try different frequency presets to see patterns" << std::endl;
             std::cout << "  - Manual control gives precise parameter adjustment" << std::endl;
         }
-        std::cout << "\n👀 WHAT TO LOOK FOR:" << std::endl;
+        std::cout << "\nWHAT TO LOOK FOR:" << std::endl;
         std::cout << "  - Colored particles (rice grains) on the plate" << std::endl;
         std::cout << "  - Particles move away from vibration nodes" << std::endl;
         std::cout << "  - Geometric patterns emerge based on frequency" << std::endl;
@@ -223,16 +223,16 @@ public:
             params.amplitude = 0.01f;  // Much gentler test amplitude
             params.frequency = 440.0f;
                 if (totalTime < 1.0f) {
-                    std::cout << "\r🧪 Testing particle visibility with gentle vibration... " << (int)(3.0f - totalTime) << "s";
+                    std::cout << "\rTesting particle visibility with gentle vibration... " << (int)(3.0f - totalTime) << "s";
                     std::cout.flush();
                 }
             } else if (totalTime >= 3.0f && totalTime < 3.5f) {
-                std::cout << "\n✅ Test complete - switching to audio input mode" << std::endl;
+                std::cout << "\nTest complete - switching to audio input mode" << std::endl;
             }
             
             // Show additional help after 8 seconds if particles might not be visible
             if (!helpShown && totalTime > 8.0f) {
-                std::cout << "\n💡 TIP: If you only see a grid:" << std::endl;
+                std::cout << "\nTIP: If you only see a grid:" << std::endl;
                 std::cout << "  - Try making LOUD sounds (whistle, speak, clap)" << std::endl;
                 std::cout << "  - Use mouse wheel to zoom in/out" << std::endl;
                 std::cout << "  - Left click + drag to rotate camera" << std::endl;
@@ -794,15 +794,15 @@ public:
         
         // Comprehensive diagnostics
         ImGui::Separator();
-        ImGui::Text("🔧 DIAGNOSTICS");
+        ImGui::Text("DIAGNOSTICS");
         
         // Performance metrics
-        ImGui::Text("⚡ Performance:");
+        ImGui::Text("Performance:");
         ImGui::Text("  FPS: %.1f (%.2fms frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
         ImGui::Text("  Simulation Time: %.2fs", simulationTime);
         
         // Simulation parameters
-        ImGui::Text("🎛️ Simulation:");
+        ImGui::Text("Simulation:");
         ImGui::Text("  Particles: %d", params.numParticles);
         ImGui::Text("  Plate Size: %.1f units", params.plateSize);
         ImGui::Text("  Time Step: %.6f", params.dt);
@@ -810,7 +810,7 @@ public:
         ImGui::Text("  Gravity: %.1f", params.gravity);
         
         // Current physics state
-        ImGui::Text("📊 Current State:");
+        ImGui::Text("Current State:");
         ImGui::Text("  Frequency: %.0f Hz", params.frequency);
         ImGui::Text("  Amplitude: %.4f", params.amplitude);
         if (audioInitialized && !manualMode) {
@@ -821,20 +821,20 @@ public:
         if (cudaInitialized) {
             try {
                 auto memInfo = CudaMemoryInfo::get();
-                ImGui::Text("💾 CUDA Memory:");
+                ImGui::Text("CUDA Memory:");
                 ImGui::Text("  Used: %.0f MB (%.1f%%)", memInfo.used_mb(), memInfo.usage_percent());
                 ImGui::Text("  Free: %.0f MB", memInfo.free_mb());
                 ImGui::Text("  Total: %.0f MB", memInfo.total_mb());
             } catch (...) {
-                ImGui::Text("💾 CUDA Memory: Query failed");
+                ImGui::Text("CUDA Memory: Query failed");
             }
         }
         
         // System status
-        ImGui::Text("🖥️ System Status:");
-        ImGui::Text("  CUDA: %s", cudaInitialized ? "✅ OK" : "❌ FAIL");
-        ImGui::Text("  Audio: %s", audioInitialized ? "✅ OK" : "❌ FAIL");
-        ImGui::Text("  Graphics: %s", resourcesRegistered ? "✅ OK" : "❌ FAIL");
+        ImGui::Text("System Status:");
+        ImGui::Text("  CUDA: %s", cudaInitialized ? "OK" : "FAIL");
+        ImGui::Text("  Audio: %s", audioInitialized ? "OK" : "FAIL");
+        ImGui::Text("  Graphics: %s", resourcesRegistered ? "OK" : "FAIL");
         
         // Debug info from GPU
         static DebugInfo dbg = {};
@@ -844,21 +844,21 @@ public:
             fetchDebugInfo(&dbg);
         }
         
-        ImGui::Text("🐛 GPU Debug:");
+        ImGui::Text("GPU Debug:");
         ImGui::Text("  NaN Positions: %u", dbg.nan_position_count);
         ImGui::Text("  NaN Velocities: %u", dbg.nan_velocity_count);
         ImGui::Text("  Invalid Normals: %u", dbg.invalid_normal_count);
         if (dbg.oob_count > 0) {
-            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.0f, 1.0f), "  ⚠️ Out of Bounds: %u (auto-reset)", dbg.oob_count);
+            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.0f, 1.0f), "  WARNING - Out of Bounds: %u (auto-reset)", dbg.oob_count);
         } else {
-            ImGui::Text("  ✅ Out of Bounds: 0");
+            ImGui::Text("  Out of Bounds: 0");
         }
         if (dbg.last_bad_index > 0) {
             ImGui::Text("  Last Bad Index: %u", dbg.last_bad_index);
         }
         
         // Reset debug counters button
-        if (ImGui::Button("🔄 Reset Debug Counters")) {
+        if (ImGui::Button("Reset Debug Counters")) {
             resetDebugInfo();
         }
         ImGui::SameLine();

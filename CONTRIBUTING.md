@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to the Chladni Realistic Rendering project! This document provides guidelines for contributing to the project.
 
-## 🚀 Getting Started
+## Getting Started
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally
@@ -12,7 +12,7 @@ Thank you for your interest in contributing to the Chladni Realistic Rendering p
 6. **Test thoroughly** before submitting
 7. **Submit a pull request**
 
-## 🎯 Areas for Contribution
+## Areas for Contribution
 
 ### High Priority
 - **Shadow Mapping**: Complete the shadow mapping system in the realistic renderer
@@ -32,7 +32,7 @@ Thank you for your interest in contributing to the Chladni Realistic Rendering p
 - **Example Projects**: Additional demo applications
 - **Performance Guides**: Optimization best practices
 
-## 🛠️ Development Guidelines
+## Development Guidelines
 
 ### Code Style
 - **C++17** standard with modern practices
