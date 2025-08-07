@@ -58,7 +58,7 @@ Thank you for your interest in contributing to the Chladni Realistic Rendering p
 - **Testing**: Ensure all tests pass before committing
 - **Dependencies**: Update documentation if dependencies change
 
-## 🧪 Testing
+## Testing
 
 ### Before Submitting
 1. **Build tests**: Ensure the project builds on Windows
@@ -71,7 +71,7 @@ Thank you for your interest in contributing to the Chladni Realistic Rendering p
 - **Secondary**: Test on different CUDA compute capabilities if possible
 - **Audio**: Test both with and without audio input devices
 
-## 📝 Pull Request Process
+## Pull Request Process
 
 1. **Create descriptive title** and detailed description
 2. **Reference issues** that your PR addresses
@@ -100,7 +100,7 @@ Brief description of changes made.
 (Include for visual changes)
 ```
 
-## 🐛 Bug Reports
+## Bug Reports
 
 ### Information to Include
 - **System specifications**: GPU, OS, driver versions
@@ -133,7 +133,7 @@ What you expected to happen.
 If applicable, add screenshots or log output.
 ```
 
-## 💡 Feature Requests
+## Feature Requests
 
 ### Information to Include
 - **Use case**: Why is this feature needed?
@@ -141,7 +141,7 @@ If applicable, add screenshots or log output.
 - **Implementation ideas**: Any thoughts on how it could be implemented
 - **Alternatives**: Alternative solutions you've considered
 
-## 🏗️ Architecture Guidelines
+## Architecture Guidelines
 
 ### Adding New Renderers
 1. **Inherit from base interfaces** when possible
@@ -161,7 +161,7 @@ If applicable, add screenshots or log output.
 3. **Occupancy**: Use CUDA profiler to optimize occupancy
 4. **Error checking**: Always check kernel launch errors
 
-## 📊 Performance Considerations
+## Performance Considerations
 
 ### Benchmarking
 - **Consistent environment**: Use same hardware/settings for comparisons
@@ -175,7 +175,7 @@ If applicable, add screenshots or log output.
 - **Startup time**: < 3 seconds initialization time
 - **CPU usage**: < 20% on modern 8-core systems
 
-## 🤝 Code Review Process
+## Code Review Process
 
 ### For Contributors
 - **Self-review**: Review your own code before submitting
@@ -189,7 +189,7 @@ If applicable, add screenshots or log output.
 - **Security**: Review for potential security issues
 - **Compatibility**: Consider impact on different hardware/OS
 
-## 📚 Resources
+## Resources
 
 ### Learning Resources
 - **CUDA Programming**: [NVIDIA CUDA Toolkit Documentation](https://docs.nvidia.com/cuda/)
@@ -203,10 +203,10 @@ If applicable, add screenshots or log output.
 - **Visual Studio**: Primary IDE for Windows development
 - **Git**: Version control best practices
 
-## 🙋‍♂️ Getting Help
+## Getting Help
 
 - **GitHub Issues**: For bugs and feature requests
 - **GitHub Discussions**: For questions and general discussion  
 - **Code Review**: For implementation questions during PR process
 
-Thank you for contributing to making scientific visualization more accessible and beautiful! 🚀
+Thank you for contributing to making scientific visualization more accessible and beautiful!

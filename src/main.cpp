@@ -103,6 +103,10 @@ private:
     float cameraAngleX = 30.0f;
     float cameraAngleY = 45.0f;
     
+    // Window dimensions for dynamic aspect ratio
+    int windowWidth = 2560;
+    int windowHeight = 1440;
+    
     // Mouse control
     bool firstMouse = true;
     bool mousePressed = false;
@@ -115,6 +119,8 @@ private:
     float manualFrequency = 440.0f;
     float manualAmplitude = 0.05f;
     bool showGUI = true;
+    int targetParticleCount = 30000;
+    bool particleCountChanged = false;
     
 public:
     ChladniSimulation() : window(nullptr), d_particles(nullptr), 
@@ -277,7 +283,26 @@ private:
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
         
-        window = glfwCreateWindow(2560, 1440, "Chladni Plate Simulation - 5K Optimized", nullptr, nullptr);
+        // Get primary monitor and its video mode for full screen support
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        
+        // Use monitor resolution for full screen or create large windowed mode
+        windowWidth = mode->width;
+        windowHeight = mode->height;
+        
+        std::cout << "Detected screen resolution: " << windowWidth << "x" << windowHeight << std::endl;
+        
+        // Create window - use full screen or large windowed mode based on preference
+        bool fullscreen = false; // Set to true for fullscreen
+        if (fullscreen) {
+            window = glfwCreateWindow(windowWidth, windowHeight, "Chladni Plate Simulation - Full Screen", monitor, nullptr);
+        } else {
+            // Use 90% of screen size for windowed mode
+            windowWidth = (int)(windowWidth * 0.9f);
+            windowHeight = (int)(windowHeight * 0.9f);
+            window = glfwCreateWindow(windowWidth, windowHeight, "Chladni Plate Simulation - Adaptive Resolution", nullptr, nullptr);
+        }
         if (!window) {
             std::cerr << "Failed to create GLFW window" << std::endl;
             glfwTerminate();
@@ -334,12 +359,13 @@ private:
         // Setup ImGui style for 5K display
         ImGui::StyleColorsDark();
         
-        // Scale UI for high-DPI displays
+        // Scale UI dynamically based on screen resolution
         ImGuiStyle& style = ImGui::GetStyle();
-        style.ScaleAllSizes(2.0f);  // 2x scale for 5K
+        float uiScale = fmaxf(1.0f, fminf(3.0f, windowWidth / 1920.0f)); // Scale based on width relative to 1920p
+        style.ScaleAllSizes(uiScale);
         
-        // Set larger font size
-        io.FontGlobalScale = 2.0f;
+        // Set proportional font size
+        io.FontGlobalScale = uiScale;
         
         // Setup Platform/Renderer backends
         ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -792,13 +818,50 @@ public:
         
         ImGui::Separator();
         
+        // Particle Count Control
+        ImGui::Text("Particle Count (Performance vs Quality):");
+        int oldCount = targetParticleCount;
+        ImGui::SliderInt("Particles", &targetParticleCount, 5000, 50000, "%d particles");
+        if (oldCount != targetParticleCount) {
+            particleCountChanged = true;
+        }
+        
+        // Performance hints
+        if (targetParticleCount < 15000) {
+            ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "High Performance, Lower Quality");
+        } else if (targetParticleCount > 35000) {
+            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Lower Performance, High Quality");
+        } else {
+            ImGui::TextColored(ImVec4(0.8f, 0.8f, 1.0f, 1.0f), "Balanced Performance/Quality");
+        }
+        
+        if (particleCountChanged) {
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.2f, 1.0f), "Restart simulation to apply particle count change");
+            if (ImGui::Button("Apply Particle Count Change")) {
+                applyParticleCountChange();
+            }
+        }
+        
+        ImGui::Separator();
+        
         // Comprehensive diagnostics
         ImGui::Separator();
         ImGui::Text("DIAGNOSTICS");
         
         // Performance metrics
         ImGui::Text("Performance:");
-        ImGui::Text("  FPS: %.1f (%.2fms frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+        float fps = ImGui::GetIO().Framerate;
+        ImGui::Text("  FPS: %.1f (%.2fms frame)", fps, 1000.0f / fps);
+        
+        // Performance color coding
+        if (fps > 50.0f) {
+            ImGui::SameLine(); ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Excellent");
+        } else if (fps > 30.0f) {
+            ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.2f, 1.0f), "Good");
+        } else if (fps < 20.0f) {
+            ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Reduce particles!");
+        }
+        
         ImGui::Text("  Simulation Time: %.2fs", simulationTime);
         
         // Simulation parameters
@@ -898,7 +961,13 @@ public:
         );
         
         view = glm::lookAt(cameraPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        projection = glm::perspective(glm::radians(45.0f), 2560.0f/1440.0f, 0.1f, 100.0f);
+        
+        // Get current window size for dynamic aspect ratio
+        int currentWidth, currentHeight;
+        glfwGetWindowSize(window, &currentWidth, &currentHeight);
+        float aspectRatio = (float)currentWidth / (float)currentHeight;
+        
+        projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
         
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -943,6 +1012,12 @@ public:
     
     // Mouse handler methods
     void handleMouseButton(int button, int action, int mods) {
+        // Skip mouse handling if ImGui wants to capture it
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureMouse) {
+            return;
+        }
+        
         if (button == GLFW_MOUSE_BUTTON_LEFT) {
             if (action == GLFW_PRESS) {
                 mousePressed = true;
@@ -961,6 +1036,12 @@ public:
     }
     
     void handleMouseMove(double xpos, double ypos) {
+        // Skip mouse handling if ImGui wants to capture it
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureMouse) {
+            return;
+        }
+        
         if (!mousePressed) return;
         
         if (firstMouse) {
@@ -994,6 +1075,12 @@ public:
     }
     
     void handleMouseScroll(double xoffset, double yoffset) {
+        // Skip mouse scroll if ImGui wants to capture it (prevents camera rotation during slider use)
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureMouse) {
+            return;
+        }
+        
         // Check if Ctrl is held for frequency control, Shift for amplitude control
         bool ctrlPressed = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || 
                           glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
@@ -1016,6 +1103,49 @@ public:
             cameraDistance *= zoomFactor;
             cameraDistance = std::max(1.0f, std::min(20.0f, cameraDistance));
         }
+    }
+    
+    void applyParticleCountChange() {
+        if (targetParticleCount == params.numParticles) {
+            particleCountChanged = false;
+            return;
+        }
+        
+        LOG_INFO("Changing particle count from " + std::to_string(params.numParticles) + 
+                " to " + std::to_string(targetParticleCount));
+        
+        // Clean up current CUDA resources
+        if (cudaInitialized && resourcesRegistered) {
+            if (cuda_vbo_resource.is_mapped()) {
+                cuda_vbo_resource.unmap();
+                d_particles = nullptr;
+            }
+            cuda_vbo_resource = CudaGraphicsResource{};
+            d_randStates = CudaDevicePtr<curandState>{};
+            resourcesRegistered = false;
+        }
+        
+        // Update particle count
+        params.numParticles = targetParticleCount;
+        
+        // Recreate OpenGL buffers with new size
+        if (VBO != 0) {
+            glDeleteBuffers(1, &VBO);
+        }
+        if (VAO != 0) {
+            glDeleteVertexArrays(1, &VAO);
+        }
+        
+        // Reinitialize CUDA with new particle count
+        if (initCUDA()) {
+            std::cout << "Successfully changed to " << params.numParticles << " particles!" << std::endl;
+        } else {
+            std::cout << "Failed to apply particle count change!" << std::endl;
+            // Revert to previous count
+            targetParticleCount = params.numParticles;
+        }
+        
+        particleCountChanged = false;
     }
     
     void cleanup() {

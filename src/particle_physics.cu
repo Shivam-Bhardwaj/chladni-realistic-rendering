@@ -146,8 +146,12 @@ __global__ void updateParticles(Particle* particles, SimulationParams params, fl
     // Apply Chladni forces - particles are pushed away from vibration antinodes
     // This creates the characteristic patterns where particles collect at nodes (quiet areas)
     
-    // Horizontal forces from plate gradient (main Chladni effect) - reduced to prevent escaping
-    float forceScale = p.mass * 20.0f; // Moderate forces for patterns without escaping
+    // Horizontal forces from plate gradient (main Chladni effect)
+    // Reduce force near center to prevent clustering
+    float distanceFromCenter = sqrtf(p.position.x * p.position.x + p.position.y * p.position.y);
+    float centerDamping = fmaxf(0.3f, fminf(1.0f, distanceFromCenter / (params.plateSize * 0.2f)));
+    
+    float forceScale = p.mass * 18.0f * centerDamping; // Reduced near center
     p.force.x += plateEffect.x * forceScale;
     p.force.y += plateEffect.y * forceScale;
     
@@ -316,11 +320,20 @@ __global__ void initParticlePositions(Particle* particles, SimulationParams para
     
     curandState localRandState = randStates[idx];
     
-    // Initialize particle positions randomly distributed over the larger plate
-    float halfPlate = params.plateSize * 0.35f;  // Slightly larger distribution for bigger plate
-    particles[idx].position.x = (curand_uniform(&localRandState) - 0.5f) * 2.0f * halfPlate;
-    particles[idx].position.y = (curand_uniform(&localRandState) - 0.5f) * 2.0f * halfPlate;
-    particles[idx].position.z = 0.01f + curand_uniform(&localRandState) * 0.03f;  // Lower start height for denser effect
+    // Initialize particles in a more distributed pattern to avoid center clustering
+    float halfPlate = params.plateSize * 0.4f;
+    
+    // Use different distribution patterns to avoid center bias
+    float rand1 = curand_uniform(&localRandState);
+    float rand2 = curand_uniform(&localRandState);
+    
+    // Create spiral/circular distribution to better spread particles
+    float angle = rand1 * 2.0f * CUDART_PI_F;
+    float radius = sqrtf(rand2) * halfPlate; // sqrt for uniform area distribution
+    
+    particles[idx].position.x = radius * cosf(angle);
+    particles[idx].position.y = radius * sinf(angle);
+    particles[idx].position.z = 0.01f + curand_uniform(&localRandState) * 0.03f;
     
     // Initialize with zero velocity
     particles[idx].velocity = make_float3(0.0f, 0.0f, 0.0f);
