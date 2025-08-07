@@ -1,0 +1,45 @@
+#version 450 core
+
+layout(local_size_x = 16, local_size_y = 16) in;
+
+layout(binding = 0, r32f) uniform image2D density_texture;
+
+layout(std430, binding = 1) buffer ParticleBuffer {
+    vec4 particles[]; // xyz = position, w = unused
+};
+
+uniform int num_particles;
+uniform float plate_size;
+uniform int texture_size;
+
+void main() {
+    ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);
+    
+    if (pixel.x >= texture_size || pixel.y >= texture_size) return;
+    
+    // Convert pixel to world coordinates
+    vec2 world_pos = (vec2(pixel) / float(texture_size - 1)) * plate_size - plate_size * 0.5;
+    
+    float density = 0.0;
+    float influence_radius = plate_size / float(texture_size) * 2.0; // Particle influence radius
+    
+    // Accumulate density from all particles
+    for (int i = 0; i < num_particles; i++) {
+        vec3 particle_pos = particles[i].xyz;
+        vec2 particle_pos_2d = particle_pos.xy;
+        
+        float dist = distance(world_pos, particle_pos_2d);
+        
+        if (dist < influence_radius) {
+            // Gaussian-like falloff
+            float weight = exp(-dist * dist / (influence_radius * influence_radius * 0.5));
+            density += weight;
+        }
+    }
+    
+    // Normalize density
+    density /= float(num_particles) * 0.1; // Scale factor for visualization
+    density = clamp(density, 0.0, 1.0);
+    
+    imageStore(density_texture, pixel, vec4(density));
+}

@@ -1,0 +1,71 @@
+# Build directories
+build/
+Release/
+Debug/
+out/
+
+# Visual Studio files
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+.vs/
+
+# Compiled binaries
+*.exe
+*.dll
+*.pdb
+*.obj
+*.lib
+*.exp
+
+# CUDA compiled files
+*.ptx
+*.cubin
+*.fatbin
+
+# Log files
+*.log
+chladni_debug.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# IDE files
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Audio/FFT temporary data
+*.wav
+*.raw
+
+# ImGui settings
+imgui.ini
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Dependencies (if locally installed)
+deps/
+third_party/
+
+# Package managers
+vcpkg_installed/
+
+# Exclude development tools
+cmake-portable/
+mingw64/
+*.bat
+*.ps1
